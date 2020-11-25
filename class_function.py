@@ -1,4 +1,3 @@
-import re
 import smtplib
 import sys
 import time
@@ -8,7 +7,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 class Ui2(QtWidgets.QWidget):
     def __init__(self, value_money):
-        super().__init__()  # Call the inherited classes __init__ method
+        super(Ui2, self).__init__()  # Call the inherited classes __init__ method
         uic.loadUi('return_window.ui', self)  # Load the .ui file
         self.value_money = value_money
         self.show()
@@ -37,7 +36,7 @@ class Ui2(QtWidgets.QWidget):
 
 class Ui(QtWidgets.QWidget):
     def __init__(self):
-        super().__init__()  # Call the inherited classes __init__ method
+        super(Ui, self).__init__()  # Call the inherited classes __init__ method
         uic.loadUi('restaurant2.ui', self)  # Load the .ui file
 
         self.btn_1.clicked.connect(lambda: self.add_item_in_text_editor('1', price=0, manytime=1))
@@ -85,7 +84,6 @@ class Ui(QtWidgets.QWidget):
         self.btn_email.clicked.connect(self.send_invoice_email)
 
         self.btn_return.clicked.connect(self.return_money)
-
 
         self.sum_list = []
         self.multi_list = []
@@ -145,7 +143,7 @@ class Ui(QtWidgets.QWidget):
             self.write_numbers_in_label(charchter)
 
     # write the numbers correct
-    def write_numbers_in_label(self,charchter):
+    def write_numbers_in_label(self, charchter):
         self.label_total.setText(self.label_total.text() + charchter)
 
         # pop up messages for warning
@@ -214,7 +212,6 @@ class Ui(QtWidgets.QWidget):
             self.textfood.insertPlainText('-' * 30 + '\n' + 'Your Total = ' + self.total2)
             self.textfood.moveCursor(QtGui.QTextCursor.End)  # to move the text down when i add more input
             self.btn_return.setEnabled(True)
-
 
         if self.change_button_command == 'to_label':
             try:
