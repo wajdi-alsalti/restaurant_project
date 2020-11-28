@@ -236,6 +236,13 @@ class Ui(QtWidgets.QWidget):
             conn.commit()
             conn.close() """
 
+    # a function to check if the email text is empty or not
+    def is_empty_email_line(self):
+        if self.the_email_address == '':
+            return True
+        else:
+            return False
+
     # function to send the invoice from the email restaurant to the email clain 
     def send_invoice_email(self):
         self.gmail_user = 'aboalirestaurant1991@gmail.com'
@@ -243,12 +250,12 @@ class Ui(QtWidgets.QWidget):
         self.sent_from = self.gmail_user
         self.the_email_address = self.line_email.text()  # 1
         self.to_check_character = list(self.the_email_address)
-        if self.the_email_address == '':
+        if self.is_empty_email_line():
             pass
         elif self.aat in self.to_check_character and self.dot in self.to_check_character:
-            subject = 'Your Invoice'
+            self.subject = 'Your Invoice'
             text_box_value = self.textfood.toPlainText()
-            body = ("""\nYour Order From Abo Ali Restaurant\n{}
+            self.body = ("""\nYour Order From Abo Ali Restaurant\n{}
                         \n Thank You For Your Perfectly Choice, We are waiting for You next Time """.format(
                 text_box_value))
 
@@ -258,7 +265,7 @@ class Ui(QtWidgets.QWidget):
             Subject: %s
 
             %s
-            """ % (self.sent_from, ", ".join(self.to), subject, body)
+            """ % (self.sent_from, ", ".join(self.to), self.subject, self.body)
             self.line_email.setText('')
 
             try:
