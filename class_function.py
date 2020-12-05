@@ -136,11 +136,16 @@ class Ui(QtWidgets.QWidget):
                 self.delete_price_in_text(price, charchter)
                 self.double_number_in_list(manytime)
                 self.textfood.moveCursor(QtGui.QTextCursor.End)  # to move the text down when i add more input
-                self.food_list.append(charchter)
-                print('add', self.sum_list)
+                if self.operation_signal == 'minus':
+                    print('food withm',self.food_list)
+                else:
+                    self.food_list.append(charchter)
+                    print('food list',self.food_list)
+                
                 self.show_total()
         elif self.change_button_command == 'to_label':
             self.write_numbers_in_label(charchter)
+        self.operation_signal = ''
 
     # write the numbers correct
     def write_numbers_in_label(self, charchter):
@@ -156,23 +161,23 @@ class Ui(QtWidgets.QWidget):
         if self.operation_signal == 'minus':
             self.minus_list.append(price * -2)
             self.food_list_check.append(charchter)
-            print('minus list ', self.minus_list)
-            self.minus_price_from_list()
+            print('check',self.food_list_check)
+            self.check_in_list()
+    
+    def undo_write_inText_editor(self):
+        for _y in range(2):
+            self.textfood.undo()
+            
 
-    def minus_price_from_list(self):
-        for i in self.food_list_check:
-            if i not in self.food_list:
-                self.food_list_check.remove(i)
-                self.minus_list.pop()
-                self.sum_list.pop(-1)
-                self.pop_up_message('Error',
-                                    'Careful Please \nYou can not Subtraction For Value You Did not Insert Before')
-                print('minua', self.sum_list)
-                for _y in range(2):
-                    self.textfood.undo()
-            else:
-                pass
-            self.operation_signal = ''
+    # another function to detect a order to subscrtion
+    def check_in_list(self):
+        for food in self.food_list:
+            if food in self.food_list_check:
+                return True
+        self.pop_up_message('Error','Careful Please\nYou can not Subtraction For Value You Did not Insert Before')
+        self.minus_list.pop()
+        self.sum_list.pop(-1)
+        self.undo_write_inText_editor()
 
     # to detect the sign of operations and loop for how many time to multi 
     def double_number_in_list(self, manytime):
@@ -284,15 +289,19 @@ class Ui(QtWidgets.QWidget):
         try:
             self.open_window = Ui2(value_money=self.total2)
             #self.open_window.btn_calculate.clicked.connect(lambda:
-                                                           #self.open_window.push_number(value_money=self.total2))
+            #self.open_window.push_number(value_money=self.total2))
             self.open_window.show()
         except:
             pass
 
     def show_total(self):
         self.total = sum(self.sum_list + self.multi_list + self.minus_list)  # 2
-        self.total2 = str(round(self.total, 2))
-        self.label_total.setText(self.total2)
+        if self.total >=0:
+            self.total2 = str(round(self.total, 2))
+            self.label_total.setText(self.total2)
+        else:
+            self.pop_up_message('Error', 'Not enough Money ')
+            self.undo_write_inText_editor()
         
 
 app = QtWidgets.QApplication(sys.argv)  # Create an instance of QtWidgets.QApplication
