@@ -5,35 +5,6 @@ from PyQt5 import QtGui, QtWidgets, uic, QtCore
 from PyQt5.QtWidgets import QMessageBox
 
 
-class Ui2(QtWidgets.QWidget):
-    def __init__(self, value_money):
-        super(Ui2, self).__init__()  # Call the inherited classes __init__ method
-        uic.loadUi('return_window.ui', self)  # Load the .ui file
-        self.value_money = value_money
-        self.show()
-        self.label_2.setText(str('\t' + ' - ' + value_money))
-
-        # this code to check if the input in line edit is just numbers and do not take character
-        # QRegExp("[a-z-A-Z_]+") for just character
-        self.regex = QtCore.QRegExp("[0-9-._]+")
-        self.validator = QtGui.QRegExpValidator(self.regex)
-        self.return_line.setValidator(self.validator)
-
-        # this for take a total price and subtract from paid money
-    def push_number(self, value_money):
-        try:
-            if self.return_line.text() != '':
-                x = self.return_line.text()
-                y = round(eval(str(x) + ' - ' + str(value_money)), 2)
-                if y >= 0:
-                    self.label_2.setText(str(x) + ' - ' + str(value_money) + ' = ' + str(y))
-                else:
-                    window.pop_up_message('Error', 'That is not enough money')
-                    self.return_line.setText('')
-        except NameError:
-            pass
-
-
 class Ui(QtWidgets.QWidget):
     def __init__(self):
         super(Ui, self).__init__()  # Call the inherited classes __init__ method
@@ -74,21 +45,15 @@ class Ui(QtWidgets.QWidget):
 
         # clear btn
         self.btn_clear.clicked.connect(self.clear_in_text_editor)
-
         self.btn_minus.clicked.connect(self.flag_delete_price)
-
         self.btn_multi.clicked.connect(self.flag_multi_price)
-
         self.btn_equal.clicked.connect(self.equal_the_invoice)
-
         self.btn_email.clicked.connect(self.send_invoice_email)
-
         self.btn_return.clicked.connect(self.return_money)
 
         self.sum_list = []
         self.multi_list = []
         self.minus_list = []
-        self.minus_list2 = []
         self.food_list = []
         self.food_list_check = []
         self.aat = '@'
@@ -106,46 +71,40 @@ class Ui(QtWidgets.QWidget):
     def flag_delete_price(self):
         if self.textfood.toPlainText() == '':
             pass
-
-        elif 'Your Total = ' in self.textfood.toPlainText():
-            pass
         else:
             self.operation_signal = 'minus'
             self.textfood.insertPlainText('-' + '\n')
+            self.set_numbers_button_disable(False)
 
         # add flag for removed and operation and pop last item from sum list
     def flag_multi_price(self):
-        if 'Your Total = ' in self.textfood.toPlainText():
+        try:
+            self.operation_signal = 'multi'
+            self.removed = self.sum_list.pop()
+            self.textfood.insertPlainText('X' + ' ')
+            self.set_foods_buttons_enabled(False)
+        except IndexError:
             pass
-        else:
-            try:
-                self.operation_signal = 'multi'
-                self.removed = self.sum_list.pop()
-                self.textfood.insertPlainText('X' + '\n')
-            except IndexError:
-                pass
 
     # to add the name of food and the price in text and then add the price in the list
     def add_item_in_text_editor(self, charchter, price, manytime=int):
         if self.change_button_command != 'to_label':
-            if 'Your Total = ' in self.textfood.toPlainText():
-                pass
-            else:
-                self.textfood.insertPlainText(charchter + '\n')
-                self.sum_list.append(price)
-                self.delete_price_in_text(price, charchter)
-                self.double_number_in_list(manytime)
-                self.textfood.moveCursor(QtGui.QTextCursor.End)  # to move the text down when i add more input
-                if self.operation_signal == 'minus':
-                    print('food withm',self.food_list)
-                else:
-                    self.food_list.append(charchter)
-                    print('food list',self.food_list)
-                
-                self.show_total()
+            self.textfood.insertPlainText(charchter + '\n')
+            self.sum_list.append(price)
+            self.delete_price_in_text(price, charchter)
+            self.double_number_in_list(manytime)
+            self.textfood.moveCursor(QtGui.QTextCursor.End)  # to move the text down when i add more input
+
+            if self.operation_signal != 'minus':
+                self.food_list.append(charchter)
+
+            self.show_total()
+
         elif self.change_button_command == 'to_label':
             self.write_numbers_in_label(charchter)
         self.operation_signal = ''
+        self.set_foods_buttons_enabled(True)
+        self.set_numbers_button_disable(True)
 
     # write the numbers correct
     def write_numbers_in_label(self, charchter):
@@ -160,10 +119,12 @@ class Ui(QtWidgets.QWidget):
     def delete_price_in_text(self, price, charchter):
         if self.operation_signal == 'minus':
             self.minus_list.append(price * -2)
-            self.food_list_check.append(charchter)
-            print('check',self.food_list_check)
-            self.check_in_list()
-    
+            if charchter in self.food_list:
+                self.food_list_check.append(charchter)
+            else:
+                self.check_in_list()
+
+    # to undo the input in text editor
     def undo_write_inText_editor(self):
         for _y in range(2):
             self.textfood.undo()
@@ -171,9 +132,6 @@ class Ui(QtWidgets.QWidget):
 
     # another function to detect a order to subscrtion
     def check_in_list(self):
-        for food in self.food_list:
-            if food in self.food_list_check:
-                return True
         self.pop_up_message('Error','Careful Please\nYou can not Subtraction For Value You Did not Insert Before')
         self.minus_list.pop()
         self.sum_list.pop(-1)
@@ -191,9 +149,7 @@ class Ui(QtWidgets.QWidget):
     # btn clear function to delete the list and the text
     def clear_in_text_editor(self):
         self.operation_signal = ''
-
         self.change_button_command = ''
-
         self.label_total.setText('')
         self.textfood.clear()
         self.sum_list.clear()
@@ -203,34 +159,37 @@ class Ui(QtWidgets.QWidget):
         self.food_list_check.clear()
         self.label_total.setText('0')
         self.btn_return.setEnabled(False)
+        self.set_foods_buttons_enabled(True)
 
     # btn equal function
     def equal_the_invoice(self):
         if self.textfood.toPlainText() == '':
             pass
 
-        elif 'Your Total = ' in self.textfood.toPlainText():
-            pass
-
-        else:
-            self.show_total()
-            self.textfood.insertPlainText('-' * 30 + '\n' + 'Your Total = ' + self.total2)
-            self.textfood.moveCursor(QtGui.QTextCursor.End)  # to move the text down when i add more input
-            self.btn_return.setEnabled(True)
-
-        if self.change_button_command == 'to_label':
+        elif self.change_button_command == 'to_label':
             try:
                 x = self.label_total.text()
                 y = round(eval(str(x) + ' - ' + str(self.total2)), 2)
+
                 if y >= 0:
                     self.label_total.setText(str(x) + ' - ' + str(self.total2) + ' = ' + str(y))
                 else:
                     self.pop_up_message('Error', 'Not enough Money')
                     self.label_total.setText('')
+
             except :
                 pass
+        
+        else:
+            self.show_total()
+            self.textfood.insertPlainText('-' * 30 + '\n' + 'Your Total = ' + self.total2)
+            self.textfood.moveCursor(QtGui.QTextCursor.End)  # to move the text down when i add more input
+            self.btn_return.setEnabled(True)
+        self.btn_equal.setEnabled(False)
 
-            """ hours = time.strftime('%H')
+        
+
+        """ hours = time.strftime('%H')
             day = time.strftime('%d')
             month = time.strftime('%m')
             conn = sqlite3.connect('incoming_data.db')
@@ -240,6 +199,44 @@ class Ui(QtWidgets.QWidget):
 
             conn.commit()
             conn.close() """
+
+    # to disable the foods buttons when we press X
+    def set_foods_buttons_enabled(self, command):
+        self.btn_chicken.setEnabled(command)
+        self.btn_beef.setEnabled(command)
+        self.btn_pizza.setEnabled(command)
+        self.btn_salat.setEnabled(command)
+        self.btn_soup.setEnabled(command)
+        self.btn_geyros.setEnabled(command)
+        self.bt_botatao.setEnabled(command)
+        self.btn_ketchup.setEnabled(command)
+        self.btn_mayo.setEnabled(command)
+        self.btn_cola.setEnabled(command)
+        self.btn_fanta.setEnabled(command)
+        self.btn_sevenup.setEnabled(command)
+        self.btn_kaffee.setEnabled(command)
+        self.btn_tee.setEnabled(command)
+        self.btn_capuccino.setEnabled(command)
+        self.btn_beer.setEnabled(command)
+        self.btn_radler.setEnabled(command)
+        self.btn_maonten.setEnabled(command)
+        self.btn_minus.setEnabled(command)
+        self.btn_equal.setEnabled(command)
+
+    # to disable the numbers buttons when we press -
+    def set_numbers_button_disable(self,command):
+        self.btn_1.setEnabled(command)
+        self.btn_2.setEnabled(command)
+        self.btn_3.setEnabled(command)
+        self.btn_4.setEnabled(command)
+        self.btn_5.setEnabled(command)
+        self.btn_6.setEnabled(command)
+        self.btn_7.setEnabled(command)
+        self.btn_8.setEnabled(command)
+        self.btn_9.setEnabled(command)
+        self.btn_0.setEnabled(command)
+        self.btn_multi.setEnabled(command)
+        self.btn_equal.setEnabled(command)
 
     # a function to check if the email text is empty or not
     def is_empty_email_line(self):
@@ -285,22 +282,14 @@ class Ui(QtWidgets.QWidget):
             self.pop_up_message('Error',
                                 'You Did not Insert @ or . check The Email Address Again Please')
 
-    def cach_back(self):
-        try:
-            self.open_window = Ui2(value_money=self.total2)
-            #self.open_window.btn_calculate.clicked.connect(lambda:
-            #self.open_window.push_number(value_money=self.total2))
-            self.open_window.show()
-        except:
-            pass
-
+    # function to show the sum in the label 
     def show_total(self):
         self.total = sum(self.sum_list + self.multi_list + self.minus_list)  # 2
         if self.total >=0:
             self.total2 = str(round(self.total, 2))
             self.label_total.setText(self.total2)
         else:
-            self.pop_up_message('Error', 'Not enough Money ')
+            self.pop_up_message('Error', 'False Entry ')
             self.undo_write_inText_editor()
         
 
