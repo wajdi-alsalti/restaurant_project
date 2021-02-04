@@ -43,7 +43,7 @@ class Login(QtWidgets.QWidget):
         self.open_main.show()
 
     def open_sell_window(self):
-        self.sell_main = Ui()
+        self.sell_main = Ui(userName_fromDB=self.userName_db)
         self.sell_main.show()
 
     #-----------------------------------------------------------------------------------------------------#
