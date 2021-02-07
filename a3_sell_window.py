@@ -1,9 +1,9 @@
 import smtplib
 import sqlite3
-from datetime import datetime
 import sys
 import time
-from PyQt5 import QtGui, QtWidgets, uic, QtCore
+from datetime import datetime
+from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from PyQt5.QtWidgets import QMessageBox
 
 
@@ -25,46 +25,81 @@ class Ui(QtWidgets.QWidget):
         self.btn_8.clicked.connect(lambda: self.add_item_in_text_editor('8', manytime=8))
         self.btn_9.clicked.connect(lambda: self.add_item_in_text_editor('9', manytime=9))
         self.btn_0.clicked.connect(lambda: self.add_item_in_text_editor('0', manytime=0))
-        
-        # foods btn
-        self.btn_chicken.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.food_name_db(1)} = {self.food_price_db(1)}', 
-                                        price=float(self.food_price_db(1))))
-        self.btn_beef.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.food_name_db(2)} = {self.food_price_db(2)}', 
-                                        price=float(self.food_price_db(2))))
-        self.btn_pizza.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.food_name_db(3)} = {self.food_price_db(3)}', 
-                                        price=float(self.food_price_db(3))))
-        self.btn_salat.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.food_name_db(4)} = {self.food_price_db(4)}', 
-                                        price=float(self.food_price_db(4))))
-        self.btn_soup.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.food_name_db(5)} = {self.food_price_db(5)}', 
-                                        price=float(self.food_price_db(5))))
-        self.btn_geyros.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.food_name_db(6)} = {self.food_price_db(6)}', 
-                                        price=float(self.food_price_db(6))))
-        self.bt_botatao.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.food_name_db(7)} = {self.food_price_db(7)}', 
-                                        price=float(self.food_price_db(7))))
-        self.btn_ketchup.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.food_name_db(8)} = {self.food_price_db(8)}', 
-                                        price=float(self.food_price_db(8))))
-        self.btn_mayo.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.food_name_db(9)} = {self.food_price_db(9)}', 
-                                        price=float(self.food_price_db(9))))
 
-        # drinks btns
-        self.btn_cola.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.drinks_name_db(1)} = {self.drinks_price_db(1)}', 
-                                        price=float(self.drinks_price_db(1))))
-        self.btn_fanta.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.drinks_name_db(2)} = {self.drinks_price_db(2)}', 
-                                        price=float(self.drinks_price_db(2))))
-        self.btn_sevenup.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.drinks_name_db(3)} = {self.drinks_price_db(3)}', 
-                                        price=float(self.drinks_price_db(3))))
-        self.btn_kaffee.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.drinks_name_db(4)} = {self.drinks_price_db(4)}', 
-                                        price=float(self.drinks_price_db(4))))
-        self.btn_tee.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.drinks_name_db(5)} = {self.drinks_price_db(5)}', 
-                                        price=float(self.drinks_price_db(5))))
-        self.btn_capuccino.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.drinks_name_db(6)} = {self.drinks_price_db(6)}', 
-                                        price=float(self.drinks_price_db(6))))
-        self.btn_beer.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.drinks_name_db(7)} = {self.drinks_price_db(7)}', 
-                                        price=float(self.drinks_price_db(7))))
-        self.btn_radler.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.drinks_name_db(8)} = {self.drinks_price_db(8)}', 
-                                        price=float(self.drinks_price_db(8))))
-        self.btn_maonten.clicked.connect(lambda: self.add_item_in_text_editor(f'{self.drinks_name_db(9)} = {self.drinks_price_db(9)}', 
-                                        price=float(self.drinks_price_db(9))))
+        # foods btn
+        self.btn_chicken.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(1,self.bring_food_name)} = {self.bringValue_db(1,self.bring_food_price)}',
+                                        price=float(self.bringValue_db(1,self.bring_food_price))))
+
+        self.btn_beef.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(2,self.bring_food_name)} = {self.bringValue_db(2,self.bring_food_price)}',
+                                        price=float(self.bringValue_db(2,self.bring_food_price))))
+
+        self.btn_pizza.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(3,self.bring_food_name)} = {self.bringValue_db(3,self.bring_food_price)}',
+                                        price=float(self.bringValue_db(3,self.bring_food_price))))
+
+        self.btn_salat.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(4,self.bring_food_name)} = {self.bringValue_db(4,self.bring_food_price)}',
+                                        price=float(self.bringValue_db(4,self.bring_food_price))))
+
+        self.btn_soup.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(5,self.bring_food_name)} = {self.bringValue_db(5,self.bring_food_price)}',
+                                        price=float(self.bringValue_db(5,self.bring_food_price))))
+
+        self.btn_geyros.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(6,self.bring_food_name)} = {self.bringValue_db(6,self.bring_food_price)}',
+                                        price=float(self.bringValue_db(6,self.bring_food_price))))
+
+        self.bt_botatao.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(7,self.bring_food_name)} = {self.bringValue_db(7,self.bring_food_price)}',
+                                        price=float(self.bringValue_db(7,self.bring_food_price))))
+
+        self.btn_ketchup.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(8,self.bring_food_name)} = {self.bringValue_db(8,self.bring_food_price)}',
+                                        price=float(self.bringValue_db(8,self.bring_food_price))))
+
+        self.btn_mayo.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(9,self.bring_food_name)} = {self.bringValue_db(9,self.bring_food_price)}',
+                                        price=float(self.bringValue_db(9,self.bring_food_price))))
+
+        # drinks buttons
+        self.btn_cola.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(1,self.bring_drink_name)} = {self.bringValue_db(1,self.bring_drink_price)}',
+                                        price=float(self.bringValue_db(1,self.bring_drink_price))))
+
+        self.btn_fanta.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(2,self.bring_drink_name)} = {self.bringValue_db(2,self.bring_drink_price)}',
+                                        price=float(self.bringValue_db(2,self.bring_drink_price))))
+
+        self.btn_sevenup.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(3,self.bring_drink_name)} = {self.bringValue_db(3,self.bring_drink_price)}',
+                                        price=float(self.bringValue_db(3,self.bring_drink_price))))
+
+        self.btn_kaffee.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(4,self.bring_drink_name)} = {self.bringValue_db(4,self.bring_drink_price)}',
+                                        price=float(self.bringValue_db(4,self.bring_drink_price))))
+
+        self.btn_tee.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(5,self.bring_drink_name)} = {self.bringValue_db(5,self.bring_drink_price)}',
+                                        price=float(self.bringValue_db(5,self.bring_drink_price))))
+
+        self.btn_capuccino.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(6,self.bring_drink_name)} = {self.bringValue_db(6,self.bring_drink_price)}',
+                                        price=float(self.bringValue_db(6,self.bring_drink_price))))
+
+        self.btn_beer.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(7,self.bring_drink_name)} = {self.bringValue_db(7,self.bring_drink_price)}',
+                                        price=float(self.bringValue_db(7,self.bring_drink_price))))
+
+        self.btn_radler.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(8,self.bring_drink_name)} = {self.bringValue_db(8,self.bring_drink_price)}',
+                                        price=float(self.bringValue_db(8,self.bring_drink_price))))
+
+        self.btn_maonten.clicked.connect(lambda: self.add_item_in_text_editor(
+                                        f'{self.bringValue_db(9,self.bring_drink_name)} = {self.bringValue_db(9,self.bring_drink_price)}',
+                                        price=float(self.bringValue_db(9,self.bring_drink_price))))
+
 
         # buttons
         self.btn_clear.clicked.connect(self.clear_in_text_editor)
@@ -87,80 +122,36 @@ class Ui(QtWidgets.QWidget):
         self.operation_signal = ''
         self.change_button_command = ''
 
+        # sql order from foods table
+        self.bring_food_name = " SELECT foods_name FROM foods where ROWID={} "
+        self.bring_food_price = " SELECT foods_price FROM foods where ROWID={} "
+
+        # sql orders from drinks table
+        self.bring_drink_name = " SELECT drinks_name FROM drinks where ROWID={} "
+        self.bring_drink_price = " SELECT drinks_price FROM drinks where ROWID={} "
+
         # to open the gui in full screen
         self.showMaximized()
 
     # -----------------------------------------------------------------------------------------------------------------------------------#
-    """ here all about data base ,name of food and price and insert the amount in db"""
+    """ data base connect and insert the amount in db"""
 
-    # connect to db and bring the price from foods table
-    def food_price_db(self,row):
+    # connect to db and bring the values from tables
+    def bringValue_db(self,row,sql_order):
         conn = sqlite3.connect('saling.db')
-        self.c = conn.cursor()
+        c = conn.cursor()
 
-        self.bring_value = f""" SELECT foods_price FROM foods where ROWID={row} """
+        bring_value = sql_order.format(row)
 
-        self.c.execute(self.bring_value)
+        c.execute(bring_value)
 
-        self.value0 = self.c.fetchone()
-        self.value1 = self.value0[0]
-        
+        value0 = c.fetchone()
+        value1 = value0[0] # return a number not a tuple
+
         conn.commit()
         conn.close()
 
-        return self.value1
-
-        
-    # connect to db and bring the name from foods table
-    def food_name_db(self,row):
-        conn = sqlite3.connect('saling.db')
-
-        self.c = conn.cursor()
-        self.bring_value = f""" SELECT foods_name FROM foods 
-                        where ROWID={row} 
-                        """
-        self.c.execute(self.bring_value)
-        self.value0 = self.c.fetchone()
-        self.value1 = self.value0[0]
-        
-        conn.commit()
-        conn.close()
-        return self.value1
-
-
-    # connect to db and bring the price from drinks table
-    def drinks_price_db(self,row):
-        conn = sqlite3.connect('saling.db')
-        self.c = conn.cursor()
-
-        self.bring_value = f""" SELECT drinks_price FROM drinks where ROWID={row} """
-
-        self.c.execute(self.bring_value)
-
-        self.value0 = self.c.fetchone()
-        self.value1 = self.value0[0]
-        
-        conn.commit()
-        conn.close()
-
-        return self.value1
-
-    # connect to db and bring the name from drinks table
-    def drinks_name_db(self,row):
-        conn = sqlite3.connect('saling.db')
-        self.c = conn.cursor()
-
-        self.bring_value = f""" SELECT drinks_name FROM drinks where ROWID={row} """
-
-        self.c.execute(self.bring_value)
-
-        self.value0 = self.c.fetchone()
-        self.value1 = self.value0[0]
-        
-        conn.commit()
-        conn.close()
-
-        return self.value1
+        return value1
 
     # add the price and email from customers in data base
     def add_values_inDailySale(self):
@@ -172,10 +163,10 @@ class Ui(QtWidgets.QWidget):
                                 VALUES (?,?,?,?)  
                         """
         self.c.execute(self.bring_value,(self.userName_fromDB,time,self.total2,self.line_email.text()))
-        
+
         conn.commit()
         conn.close()
-        
+
     # -----------------------------------------------------------------------------------------------------------------------------------#
 
     # flag to change command buttons to write in label
@@ -183,7 +174,6 @@ class Ui(QtWidgets.QWidget):
         self.change_button_command = 'to_label'
         self.label_total.setText('')
         self.label_2.setText('Return')
-
 
     # -----------------------------------------------------------------------------------------------------------------------------------#
     """functions for subtraction"""
@@ -200,29 +190,28 @@ class Ui(QtWidgets.QWidget):
     def delete_price_in_text(self, price, character):
         if self.operation_signal == 'minus':
             self.minus_list.append(price * -2)
+
             # add items in food list to compare it with food list
             if character in self.food_list:
                 self.food_list_check.append(character)
-                # will count how many same item in list and if in number check list more than in food list will do things
+
+            # will count how many same item in list and if in number check list more than in food list will do things
                 if self.food_list_check.count(character) > self.food_list.count(character):
-                    self.undo_write_inText_editor()
-                    self.pop_up_message('Error', 'You have already removed the order')
-                    self.sum_list.pop()
-                    self.minus_list.pop()
+                    self.check_in_list('Error','You have already removed the order')
 
             else:
-                self.check_in_list()
+                self.check_in_list('Error','Careful Please\nYou can not Subtraction a Value You Did not Insert Before')
 
-    # function to delete the last item if it was not in list before 
-    def check_in_list(self):
+    # function to delete the last item if it was not in list before
+    def check_in_list(self, error, mes):
         self.undo_write_inText_editor()
-        self.pop_up_message('Error','Careful Please\nYou can not Subtraction a Value You Did not Insert Before')
+        self.pop_up_message(error,mes)
         self.minus_list.pop()
         self.sum_list.pop()
 
     # -----------------------------------------------------------------------------------------------------------------------------------#
     """functions for multifunction"""
-        # add flag for removed and operation and pop last item from sum list
+    # add flag for removed and operation and pop last item from sum list
     def flag_multi_price(self):
         try:
             self.operation_signal = 'multi'
@@ -232,13 +221,17 @@ class Ui(QtWidgets.QWidget):
         except IndexError:
             pass
 
-    # to detect the sign of operations and loop for how many time to multi 
+    # to detect the sign of operations and loop for how many time to multi
     def double_number_in_list(self, manytime):
         if self.operation_signal == 'multi':
             try:
+                # repeat last item if food list and add in loop to give the same number had multiplicate
+                repeat = self.food_list[-1]
                 for _i in range(manytime):
                     self.multi_list.append(self.removed)
-                    # print(self.multi_list)
+                    self.food_list.append(repeat)
+                # pop last item to have a same number we want to count
+                self.food_list.pop()
             except TypeError:
                 pass
     # -----------------------------------------------------------------------------------------------------------------------------------#
@@ -265,7 +258,6 @@ class Ui(QtWidgets.QWidget):
         self.set_foods_buttons_enabled(True)
         self.set_numbers_button_disable(True)
 
-
     # -----------------------------------------------------------------------------------------------------------------------------------#
 
     # write the numbers correct
@@ -284,7 +276,7 @@ class Ui(QtWidgets.QWidget):
     def undo_write_inText_editor(self):
         for _y in range(2):
             self.textfood.undo()
-            
+
     # -----------------------------------------------------------------------------------------------------------------------------------#
 
     # button clear function to delete the list and the text
@@ -323,7 +315,7 @@ class Ui(QtWidgets.QWidget):
 
             except :
                 pass
-        
+
         else:
             self.show_total()
             self.textfood.insertPlainText('-' * 30 + '\n' + 'Your Total = ' + self.total2)
@@ -381,7 +373,7 @@ class Ui(QtWidgets.QWidget):
         else:
             return False
 
-    # function to send the invoice from the email restaurant to the email clain 
+    # function to send the invoice from the email restaurant to the email clain
     def send_invoice_email(self):
         self.gmail_user = 'aboalirestaurant1991@gmail.com'
         self.gmail_password = 'wajdiaboali1991'
@@ -391,7 +383,7 @@ class Ui(QtWidgets.QWidget):
 
         if self.is_empty_email_line():
             self.pop_up_message('Error', 'There is no Email address')
-            
+
         elif (self.aat in self.to_check_character and self.dot in self.to_check_character):
             self.subject = 'Your Invoice'
             text_box_value = self.textfood.toPlainText()
@@ -420,10 +412,10 @@ class Ui(QtWidgets.QWidget):
             self.pop_up_message('Error',
                                 'You Did not Insert @ or . check The Email Address Again Please')
 
-
     # -----------------------------------------------------------------------------------------------------------------------------------#
+
     """ auto sum and put it in label and warning if the sum less than 0 """
-    # function to show the sum in the label 
+    # function to show the sum in the label
     def show_total(self):
         self.total = sum(self.sum_list + self.multi_list + self.minus_list)  # 2
         if self.total >=0:
@@ -432,7 +424,7 @@ class Ui(QtWidgets.QWidget):
         else:
             self.pop_up_message('Error', 'False Entry ')
             self.undo_write_inText_editor()
-        
+
     # -----------------------------------------------------------------------------------------------------------------------------------#
 
 
