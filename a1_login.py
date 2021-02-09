@@ -9,7 +9,7 @@ from a3_sell_window import Ui
 class Login(QtWidgets.QWidget):
     def __init__(self):
         super(Login, self).__init__()
-        uic.loadUi('login_gui.ui', self)
+        uic.loadUi('a1_login.ui', self)
 
         self.login_btn.clicked.connect(lambda : self.approve())
 
@@ -119,4 +119,5 @@ class Login(QtWidgets.QWidget):
 app = QtWidgets.QApplication(sys.argv)  
 window = Login() 
 app.exec_()  # Start the app
+sys.exit(app.exec_())
 
