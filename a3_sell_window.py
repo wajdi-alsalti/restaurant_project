@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QMessageBox
 class Ui(QtWidgets.QWidget):
     def __init__(self, userName_fromDB): # pass user name in class to bring it the value from db when it login
         super(Ui, self).__init__()  # Call the inherited classes __init__ method
-        uic.loadUi('restaurant2.ui', self)  # Load the .ui file
+        uic.loadUi('a3_sell_window.ui', self)  # Load the .ui file
         # -----------------------------------------------------------------------------------------------------------------------------------#
         """ all the buttons and with which functions connected"""
         self.userName_fromDB = userName_fromDB
@@ -428,7 +428,7 @@ class Ui(QtWidgets.QWidget):
     # -----------------------------------------------------------------------------------------------------------------------------------#
 
 
-app = QtWidgets.QApplication(sys.argv)  # Create an instance of QtWidgets.QApplication
-window = Ui(userName_fromDB='test')  # Create an instance of our class
+# app = QtWidgets.QApplication(sys.argv)  # Create an instance of QtWidgets.QApplication
+# window = Ui(userName_fromDB='test')  # Create an instance of our class
 
-app.exec_()  # Start the application
+# app.exec_()  # Start the application
