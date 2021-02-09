@@ -3,18 +3,20 @@ import sys
 import sqlite3
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from a3_sell_window import Ui
+from a4_worker_table import Table
 
 
 class main_window(QtWidgets.QMainWindow):
     def __init__(self):
         super(main_window, self).__init__()  # Call the inherited classes __init__ method
-        uic.loadUi('mainwidget.ui', self)  # Load the .ui file
+        uic.loadUi('a2_adminWindow.ui', self)  # Load the .ui file
 
         self.list_of_worker = []
         self.list_of_numberOfSales = []
 
         self.sales_btn.clicked.connect(lambda: self.open_sell_window())
         self.graf_sales_btn.clicked.connect(lambda : self.show_graf())
+        self.workerInfo_btn.clicked.connect(lambda: self.open_table())
 
         self.show()
     #--------------------------------------------------------------------------------------------------------#
@@ -23,6 +25,11 @@ class main_window(QtWidgets.QMainWindow):
         self.open_sellWindow = Ui(userName_fromDB='admin')
         self.open_sellWindow.show()
         self.destroy()
+
+    """ to open the table from class Table in a4_worker_table """
+    def open_table(self):
+        self.window = Table()
+        self.window.show()
 
     #--------------------------------------------------------------------------------------------------------#
     """ connect to db and bring the employee names of each and return the list of the names """
@@ -88,8 +95,8 @@ class main_window(QtWidgets.QMainWindow):
     #--------------------------------------------------------------------------------------------------------#
 
 
-app = QtWidgets.QApplication(sys.argv)
-ui = main_window()
-sys.exit(app.exec_())
+# app = QtWidgets.QApplication(sys.argv)
+# ui = main_window()
+# sys.exit(app.exec_())
 
 # # manager = QtWidgets.QMai()
